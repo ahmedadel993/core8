@@ -1,0 +1,130 @@
+@import "tailwindcss";
+
+/* ---------- CORE8 design tokens ---------- */
+:root {
+  --core8-black: #000000;
+  --core8-dark: #080808;
+  --core8-white: #ffffff;
+  --core8-muted: #d9d9d9;
+  --core8-gray: #8a8a8a;
+  --core8-green: #8bcf00;
+
+  --product-lean-kiwi: #8bcf00;
+  --product-berry-lean: #e83b91;
+  --product-power-max: #ff8a00;
+  --product-focus-max: #008cff;
+  --product-muscle-max: #f21d3b;
+
+  /* Per-component accent; overridden inline via `accentStyle()`. */
+  --accent: var(--core8-green);
+
+  --nav-height: 4.5rem;
+}
+
+@theme inline {
+  --color-core8-black: var(--core8-black);
+  --color-core8-dark: var(--core8-dark);
+  --color-core8-white: var(--core8-white);
+  --color-core8-muted: var(--core8-muted);
+  --color-core8-gray: var(--core8-gray);
+  --color-core8-green: var(--core8-green);
+  --color-accent: var(--accent);
+
+  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-arabic: var(--font-cairo), ui-sans-serif, system-ui, sans-serif;
+
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-spin-slow: spin 40s linear infinite;
+  --animate-scroll-hint: scroll-hint 2.2s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-1.5deg);
+  }
+  50% {
+    transform: translateY(-14px) rotate(1deg);
+  }
+}
+
+@keyframes scroll-hint {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(200%);
+  }
+}
+
+/* ---------- Base ---------- */
+@layer base {
+  html {
+    background: var(--core8-black);
+    color-scheme: dark;
+    scroll-padding-top: var(--nav-height);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  body {
+    background: var(--core8-black);
+    color: var(--core8-white);
+    font-family: var(--font-sans);
+    /* `clip` (not `hidden`) prevents horizontal overflow without breaking position: sticky. */
+    overflow-x: clip;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :lang(ar) {
+    font-family: var(--font-arabic);
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  ::selection {
+    background: var(--core8-green);
+    color: var(--core8-black);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--core8-green);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+}
+
+/* ---------- Minimal utilities ---------- */
+@utility text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1px rgb(255 255 255 / 0.07);
+}
+
+@utility text-balance-pretty {
+  text-wrap: balance;
+}
+
+/*
+ * Scroll reveal (see components/ui/Reveal.tsx). Content is only hidden when
+ * scripting is available and motion is allowed, so it is never lost without JS.
+ */
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  [data-reveal] {
+    transition:
+      opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+
+  [data-reveal="hidden"] {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+}
